@@ -7,9 +7,13 @@ package br.edu.compras02.view;
 import br.edu.compras02.model.Cliente;
 import br.edu.compras02.model.Produto;
 import br.edu.compras02.util.InicializarComponentes;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,11 +31,14 @@ public class Principal extends javax.swing.JFrame {
     
     private ArrayList<Cliente> listaDeClientes =  new ArrayList<>();
     private ArrayList<Produto> listaDeProdutos =  new ArrayList<>();
+    private int index = -1;
+    private boolean editar = false;
     
     public Principal() {
         initComponents();
         configuraCampos();
         setLocationRelativeTo(this);
+        selecionarClienteTabela();
     }
 
     /**
@@ -65,10 +72,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblListaDeClientes = new javax.swing.JTable();
-        btnEditarCliente = new javax.swing.JButton();
         btnExcluirCliente = new javax.swing.JButton();
         txtPesquisarCliente = new javax.swing.JTextField();
-        btnPesquisarCliente = new javax.swing.JButton();
         jPanelProdutos = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
@@ -225,6 +230,11 @@ public class Principal extends javax.swing.JFrame {
         });
 
         btnLimparClientes.setText("Limpar");
+        btnLimparClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparClientesActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("Lista de Clientes:");
@@ -254,19 +264,10 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblListaDeClientes);
 
-        btnEditarCliente.setText("Editar");
-        btnEditarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarClienteActionPerformed(evt);
-            }
-        });
-
         btnExcluirCliente.setText("Excluir");
-
-        btnPesquisarCliente.setText("Pesquisar");
-        btnPesquisarCliente.addActionListener(new java.awt.event.ActionListener() {
+        btnExcluirCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarClienteActionPerformed(evt);
+                btnExcluirClienteActionPerformed(evt);
             }
         });
 
@@ -295,14 +296,11 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnSalvarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnLimparClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEditarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnExcluirCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)))
                     .addGroup(jPanelClientesLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPesquisarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnPesquisarCliente)))
+                        .addComponent(txtPesquisarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanelClientesLayout.setVerticalGroup(
@@ -323,22 +321,18 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnLimparClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(jPanelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txtPesquisarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPesquisarCliente))
+                    .addComponent(txtPesquisarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelClientesLayout.createSequentialGroup()
-                        .addComponent(btnEditarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExcluirCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnExcluirCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27))
         );
 
-        jTabbedPane1.addTab("Cliente", new javax.swing.ImageIcon("C:\\Users\\Aluno\\Desktop\\Compras-master\\src\\resources\\user_icon.png"), jPanelClientes, ""); // NOI18N
+        jTabbedPane1.addTab("Cliente", null, jPanelClientes, "");
 
         jPanelProdutos.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -563,7 +557,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane1.addTab("Produto", new javax.swing.ImageIcon("C:\\Users\\Aluno\\Desktop\\Compras-master\\src\\resources\\product_icon.png"), jPanelProdutos); // NOI18N
+        jTabbedPane1.addTab("Produto", null, jPanelProdutos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -592,19 +586,24 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEditarClienteActionPerformed
-
-    private void btnPesquisarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarClienteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPesquisarClienteActionPerformed
-
     private void btnSalvarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarClienteActionPerformed
-        Cliente c = retornaCliente();
-        listaDeClientes.add(c);
-        atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
-        System.out.println(listaDeClientes.toString());
+        if (!editar) {
+            try {
+                Cliente c = retornaCliente();
+                listaDeClientes.add(c);
+                atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
+                System.out.println(listaDeClientes.toString());
+                limparCampos();
+            } catch(DateTimeParseException ex) {
+                System.out.println(ex);
+                JOptionPane.showMessageDialog(null, "Coloque uma data válida");
+            } catch(Exception ex) {
+                System.out.println(ex);
+            }
+        } else {
+            editarCliente(index);
+            atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
+        }
     }//GEN-LAST:event_btnSalvarClienteActionPerformed
 
     private void btnSalvarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarProdutoActionPerformed
@@ -612,6 +611,7 @@ public class Principal extends javax.swing.JFrame {
         listaDeProdutos.add(p);
         atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
         System.out.println(listaDeProdutos.toString());
+        limparCampos();
     }//GEN-LAST:event_btnSalvarProdutoActionPerformed
 
     private void btnEditarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCliente1ActionPerformed
@@ -621,6 +621,16 @@ public class Principal extends javax.swing.JFrame {
     private void btnPesquisarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCliente1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPesquisarCliente1ActionPerformed
+
+    private void btnLimparClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparClientesActionPerformed
+        limparCampos();
+        editar = false;
+        index = -1;
+    }//GEN-LAST:event_btnLimparClientesActionPerformed
+
+    private void btnExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirClienteActionPerformed
+        deletarCliente(index);
+    }//GEN-LAST:event_btnExcluirClienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -659,13 +669,11 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btgSexoCliente;
-    private javax.swing.JButton btnEditarCliente;
     private javax.swing.JButton btnEditarCliente1;
     private javax.swing.JButton btnExcluirCliente;
     private javax.swing.JButton btnExcluirCliente1;
     private javax.swing.JButton btnLimparClientes;
     private javax.swing.JButton btnLimparProduto;
-    private javax.swing.JButton btnPesquisarCliente;
     private javax.swing.JButton btnPesquisarCliente1;
     private javax.swing.JButton btnSalvarCliente;
     private javax.swing.JButton btnSalvarProduto;
@@ -794,5 +802,87 @@ public class Principal extends javax.swing.JFrame {
             
         }
     }
+    
+    private void limparCampos() {
+        txtNomeCliente.setText("");
+        txtNomeCliente.requestFocus(); // o campo nome ganha foco
+        ftdCpfCliente.setText("");
+        ftdDataNascimentoCliente.setText("");
+        ftdTelefoneCliente.setText("");
+        btgSexoCliente.clearSelection();
+    }
 
+    private void selecionarClienteTabela() {
+        tblListaDeClientes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                index = tblListaDeClientes.getSelectedRow();
+                if (index >= 0) {
+                    recuperaCliente(index);
+                    editar = true;
+                }
+            }            
+        });
+    }
+    
+    private void recuperaCliente(int index) {
+        
+        Cliente c = listaDeClientes.get(index);
+        
+        txtNomeCliente.setText(c.getNome());
+        ftdCpfCliente.setText(c.getCpf());
+        ftdTelefoneCliente.setText(c.getTelefone());
+        
+        if (c.getSexo().equals("Masculino")) {
+            rdbMasculinoCliente.setSelected(true);
+        } else if (c.getSexo().equals("Feminino")) {
+            rdbFemininoCliente.setSelected(true);
+        } else if (c.getSexo().equals("Indefinido")) {
+            rdbIndefinidoCliente.setSelected(true);
+        }
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String dataFormatada = c.getDataDeNascimento().format(dtf);
+        ftdDataNascimentoCliente.setText(dataFormatada);
+    }
+
+    private void editarCliente(int index) {
+        Cliente c = listaDeClientes.get(index);
+        
+        String nomeCompleto = txtNomeCliente.getText();
+        String telefone = ftdTelefoneCliente.getText();
+        String cpf = ftdCpfCliente.getText();
+        
+        String sexo;
+        if(rdbMasculinoCliente.isSelected()){
+            sexo = "Masculino";
+        }else if(rdbFemininoCliente.isSelected()){
+            sexo = "Feminino";
+        }else{
+            sexo = "Indefinido";
+        }
+        
+        String data = ftdDataNascimentoCliente.getText();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNascimento = LocalDate.parse(data, dtf);
+
+        c.setNome(nomeCompleto);
+        c.setTelefone(telefone);
+        c.setCpf(cpf);
+        c.setSexo(sexo);
+        c.setDataDeNascimento(dataNascimento);
+        
+    }
+
+    private void deletarCliente(int index) {
+        if (index > -1) {
+            listaDeClientes.remove(index);
+            atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
+            limparCampos();
+            editar = false;
+            this.index = -1;
+        } else {
+            JOptionPane.showMessageDialog(this, "Não foi selecionado nenhum cliente para exclusão.");
+        }
+    }
 }
