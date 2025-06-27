@@ -37,8 +37,9 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         configuraCampos();
-        setLocationRelativeTo(this);
+        setLocationRelativeTo(null);
         selecionarClienteTabela();
+        selecionarProdutoTabela();
     }
 
     /**
@@ -91,10 +92,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblListaDeProdutos = new javax.swing.JTable();
-        btnEditarCliente1 = new javax.swing.JButton();
-        btnExcluirCliente1 = new javax.swing.JButton();
+        btxExcluirProduto = new javax.swing.JButton();
         txtPesquisarCliente1 = new javax.swing.JTextField();
-        btnPesquisarCliente1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -425,6 +424,11 @@ public class Principal extends javax.swing.JFrame {
         });
 
         btnLimparProduto.setText("Limpar");
+        btnLimparProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimparProdutoActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Lista de Produtos:");
@@ -454,19 +458,10 @@ public class Principal extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tblListaDeProdutos);
 
-        btnEditarCliente1.setText("Editar");
-        btnEditarCliente1.addActionListener(new java.awt.event.ActionListener() {
+        btxExcluirProduto.setText("Excluir");
+        btxExcluirProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarCliente1ActionPerformed(evt);
-            }
-        });
-
-        btnExcluirCliente1.setText("Excluir");
-
-        btnPesquisarCliente1.setText("Pesquisar");
-        btnPesquisarCliente1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarCliente1ActionPerformed(evt);
+                btxExcluirProdutoActionPerformed(evt);
             }
         });
 
@@ -478,19 +473,15 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnEditarCliente1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnExcluirCliente1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)))
+                        .addComponent(btxExcluirProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtPesquisarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPesquisarCliente1))
+                                .addComponent(txtPesquisarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -530,14 +521,10 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txtPesquisarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnPesquisarCliente1))
+                    .addComponent(txtPesquisarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(btnEditarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExcluirCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btxExcluirProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
@@ -557,7 +544,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jTabbedPane1.addTab("Produto", null, jPanelProdutos);
+        jTabbedPane1.addTab("Produto", jPanelProdutos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -587,40 +574,44 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarClienteActionPerformed
-        if (!editar) {
-            try {
+
+        if(!editar){
+            try{
                 Cliente c = retornaCliente();
                 listaDeClientes.add(c);
                 atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
                 System.out.println(listaDeClientes.toString());
                 limparCampos();
-            } catch(DateTimeParseException ex) {
+            }catch(DateTimeParseException ex){// a "Exception" vai retornar qualquer tipo de erro
+                JOptionPane.showMessageDialog(this, "Coloque uma data válida");
+            }catch(Exception ex){
                 System.out.println(ex);
-                JOptionPane.showMessageDialog(null, "Coloque uma data válida");
-            } catch(Exception ex) {
-                System.out.println(ex);
-            }
-        } else {
+            }   
+        }else{
             editarCliente(index);
-            atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
+            atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
+            index = -1;
         }
     }//GEN-LAST:event_btnSalvarClienteActionPerformed
 
     private void btnSalvarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarProdutoActionPerformed
-        Produto p = retornaProduto();
-        listaDeProdutos.add(p);
-        atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
-        System.out.println(listaDeProdutos.toString());
-        limparCampos();
+  
+        if(!editar){
+            try{
+                Produto p = retornaProduto();
+                listaDeProdutos.add(p);
+                atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
+                System.out.println(listaDeProdutos.toString());
+                limparCampos();       
+            }catch(Exception ex){
+                System.out.println(ex);
+            }   
+        }else{
+            editarProduto(index);
+            atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
+            index = -1;
+        }
     }//GEN-LAST:event_btnSalvarProdutoActionPerformed
-
-    private void btnEditarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCliente1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEditarCliente1ActionPerformed
-
-    private void btnPesquisarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarCliente1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPesquisarCliente1ActionPerformed
 
     private void btnLimparClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparClientesActionPerformed
         limparCampos();
@@ -631,6 +622,16 @@ public class Principal extends javax.swing.JFrame {
     private void btnExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirClienteActionPerformed
         deletarCliente(index);
     }//GEN-LAST:event_btnExcluirClienteActionPerformed
+
+    private void btxExcluirProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btxExcluirProdutoActionPerformed
+        deletarProduto(index);
+    }//GEN-LAST:event_btxExcluirProdutoActionPerformed
+
+    private void btnLimparProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparProdutoActionPerformed
+        limparCampos();
+        editar = false;
+        index = -1;
+    }//GEN-LAST:event_btnLimparProdutoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -669,14 +670,12 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btgSexoCliente;
-    private javax.swing.JButton btnEditarCliente1;
     private javax.swing.JButton btnExcluirCliente;
-    private javax.swing.JButton btnExcluirCliente1;
     private javax.swing.JButton btnLimparClientes;
     private javax.swing.JButton btnLimparProduto;
-    private javax.swing.JButton btnPesquisarCliente1;
     private javax.swing.JButton btnSalvarCliente;
     private javax.swing.JButton btnSalvarProduto;
+    private javax.swing.JButton btxExcluirProduto;
     private javax.swing.JFormattedTextField ftdCpfCliente;
     private javax.swing.JFormattedTextField ftdDataNascimentoCliente;
     private javax.swing.JFormattedTextField ftdTelefoneCliente;
@@ -805,27 +804,46 @@ public class Principal extends javax.swing.JFrame {
     
     private void limparCampos() {
         txtNomeCliente.setText("");
-        txtNomeCliente.requestFocus(); // o campo nome ganha foco
         ftdCpfCliente.setText("");
         ftdDataNascimentoCliente.setText("");
         ftdTelefoneCliente.setText("");
         btgSexoCliente.clearSelection();
+        txtNomeCliente.requestFocus(); // o campo nome ganha foco
+         
+        txtNomeProduto.setText("");
+        txtQuantidadeProduto.setText("");
+        txtCodigoProduto.setText("");
+        txtPrecoProduto.setText("");
+        txtNomeProduto.requestFocus();
     }
 
-    private void selecionarClienteTabela() {
+    private void selecionarClienteTabela(){
         tblListaDeClientes.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 index = tblListaDeClientes.getSelectedRow();
-                if (index >= 0) {
+                if(index >= 0){
                     recuperaCliente(index);
                     editar = true;
                 }
-            }            
+            } 
         });
     }
     
-    private void recuperaCliente(int index) {
+    private void selecionarProdutoTabela(){
+        tblListaDeProdutos.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                index = tblListaDeProdutos.getSelectedRow();
+                if(index >= 0){
+                    recuperaProduto(index);
+                    editar = true;
+                }
+            } 
+        });
+    }
+    
+     private void recuperaCliente(int index) {
         
         Cliente c = listaDeClientes.get(index);
         
@@ -833,18 +851,29 @@ public class Principal extends javax.swing.JFrame {
         ftdCpfCliente.setText(c.getCpf());
         ftdTelefoneCliente.setText(c.getTelefone());
         
-        if (c.getSexo().equals("Masculino")) {
+        if(c.getSexo().equals("Masculino")){
             rdbMasculinoCliente.setSelected(true);
-        } else if (c.getSexo().equals("Feminino")) {
+        }else if(c.getSexo().equals("Feminino")){
             rdbFemininoCliente.setSelected(true);
-        } else if (c.getSexo().equals("Indefinido")) {
+        }else if(c.getSexo().equals("Indefinido")){
             rdbIndefinidoCliente.setSelected(true);
         }
-        
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter dtf =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String dataFormatada = c.getDataDeNascimento().format(dtf);
         ftdDataNascimentoCliente.setText(dataFormatada);
+    
     }
+    
+    private void recuperaProduto(int index) {
+        
+        Produto p = listaDeProdutos.get(index);
+        
+        txtNomeProduto.setText(p.getNome());
+        txtPrecoProduto.setText(String.valueOf(p.getPreco()));
+        txtQuantidadeProduto.setText(String.valueOf(p.getQuantidade()));
+        txtCodigoProduto.setText(String.valueOf(p.getCodigo()));
+    }
+     
 
     private void editarCliente(int index) {
         Cliente c = listaDeClientes.get(index);
@@ -865,24 +894,51 @@ public class Principal extends javax.swing.JFrame {
         String data = ftdDataNascimentoCliente.getText();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataNascimento = LocalDate.parse(data, dtf);
-
+       
         c.setNome(nomeCompleto);
         c.setTelefone(telefone);
         c.setCpf(cpf);
         c.setSexo(sexo);
         c.setDataDeNascimento(dataNascimento);
-        
+       
     }
 
-    private void deletarCliente(int index) {
-        if (index > -1) {
-            listaDeClientes.remove(index);
+    private void deletarCliente(int i) {
+        if(i > -1){
+            listaDeClientes.remove(i);
             atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
             limparCampos();
             editar = false;
-            this.index = -1;
-        } else {
-            JOptionPane.showMessageDialog(this, "Não foi selecionado nenhum cliente para exclusão.");
+            index = -1;
+        }else{
+            JOptionPane.showMessageDialog(this, "Não foi selecionado nenhum cliente para exclusão");
         }
+    }
+    
+    private void deletarProduto(int i) {
+        if(i > -1){
+            listaDeProdutos.remove(i);
+            atualizaTabelaProduto(tblListaDeProdutos, listaDeProdutos);
+            limparCampos();
+            editar = false;
+            index = -1;
+        }else{
+            JOptionPane.showMessageDialog(this, "Não foi selecionado nenhum produto para exclusão");
+        }
+    }
+
+    private void editarProduto(int index) {
+        
+        Produto p = listaDeProdutos.get(index);
+        
+        String nome = txtNomeProduto.getText();
+        double preco = Double.parseDouble(txtPrecoProduto.getText());
+        int quantidade = Integer.parseInt(txtQuantidadeProduto.getText());
+        int codigo = Integer.parseInt(txtCodigoProduto.getText());
+        
+        p.setNome(nome);
+        p.setCodigo(codigo);
+        p.setPreco(preco);
+        p.setQuantidade(quantidade);
     }
 }
