@@ -4,6 +4,7 @@
  */
 package br.edu.compras02.view;
 
+import br.edu.compras02.controller.ClienteController;
 import br.edu.compras02.controller.ProdutoController;
 import br.edu.compras02.model.Cliente;
 import br.edu.compras02.model.Produto;
@@ -15,8 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -30,12 +29,11 @@ public class Principal extends javax.swing.JFrame {
     private final String CODIGO_PRODUTO = "Insira o código";
     private final String QUANTIDADE_PRODUTO = "Insira a quantidade";
     
-    private ArrayList<Cliente> listaDeClientes =  new ArrayList<>();
-    private ArrayList<Produto> listaDeProdutos =  new ArrayList<>();
     private int index = -1;
     private boolean editar = false;
     
     private final ProdutoController produtoController = new ProdutoController();
+    private final ClienteController clienteController = new ClienteController();
     
     public Principal() {
         initComponents();
@@ -582,23 +580,23 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarClienteActionPerformed
-
-        if(!editar){
-            try{
-                Cliente c = retornaCliente();
-                listaDeClientes.add(c);
-                atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
-                System.out.println(listaDeClientes.toString());
-                limparCampos();
-            }catch(DateTimeParseException ex){// a "Exception" vai retornar qualquer tipo de erro
-                JOptionPane.showMessageDialog(this, "Coloque uma data válida");
-            }catch(Exception ex){
-                System.out.println(ex);
-            }   
-        }else{
-            editarCliente(index);
-            atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
+        
+        try {
+            if (!editar) {
+                clienteController.addCliente(retornaCliente());
+            } else {
+                clienteController.editarCliente(index, retornaCliente());
+            }
+            
+            clienteController.atualizaTabela(tblListaDeClientes);
+            limparCampos();
             index = -1;
+            editar = false;
+            
+        } catch (DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "Coloque uma data válida");
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
     }//GEN-LAST:event_btnSalvarClienteActionPerformed
 
@@ -628,7 +626,11 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimparClientesActionPerformed
 
     private void btnExcluirClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirClienteActionPerformed
-        deletarCliente(index);
+        clienteController.excluirCliente(index);
+        clienteController.atualizaTabela(tblListaDeClientes);
+        limparCampos();
+        index = -1;
+        editar = false;
     }//GEN-LAST:event_btnExcluirClienteActionPerformed
 
     private void btxExcluirProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btxExcluirProdutoActionPerformed
@@ -781,23 +783,6 @@ public class Principal extends javax.swing.JFrame {
         return p;
     }
     
-    private void atualizaTabelaCliente(JTable tabela, ArrayList<Cliente> listaDeClientes){
-        DefaultTableModel modeloTabela = (DefaultTableModel) tabela.getModel();
-        
-        modeloTabela.setNumRows(0);
-        
-        for(Cliente c : listaDeClientes){
-            Object[] linha = {c.getNome(), 
-                              c.getTelefone(),
-                              c.getDataDeNascimento(),
-                              c.getCpf(), 
-                              c.getSexo()
-                            };
-            modeloTabela.addRow(linha);
-            
-        }
-    }
-    
     private void limparCampos() {
         txtNomeCliente.setText("");
         ftdCpfCliente.setText("");
@@ -841,7 +826,7 @@ public class Principal extends javax.swing.JFrame {
     
     private void recuperaCliente(int index) {
         
-        Cliente c = listaDeClientes.get(index);
+        Cliente c = clienteController.getCliente(index);
         
         txtNomeCliente.setText(c.getNome());
         ftdCpfCliente.setText(c.getCpf());
@@ -871,45 +856,4 @@ public class Principal extends javax.swing.JFrame {
             txtCodigoProduto.setText(String.valueOf(p.getCodigo()));
         }
     }
-     
-    private void editarCliente(int index) {
-        Cliente c = listaDeClientes.get(index);
-        
-        String nomeCompleto = txtNomeCliente.getText();
-        String telefone = ftdTelefoneCliente.getText();
-        String cpf = ftdCpfCliente.getText();
-        
-        String sexo;
-        if(rdbMasculinoCliente.isSelected()){
-            sexo = "Masculino";
-        }else if(rdbFemininoCliente.isSelected()){
-            sexo = "Feminino";
-        }else{
-            sexo = "Indefinido";
-        }
-        
-        String data = ftdDataNascimentoCliente.getText();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataNascimento = LocalDate.parse(data, dtf);
-       
-        c.setNome(nomeCompleto);
-        c.setTelefone(telefone);
-        c.setCpf(cpf);
-        c.setSexo(sexo);
-        c.setDataDeNascimento(dataNascimento);
-       
-    }
-
-    private void deletarCliente(int i) {
-        if(i > -1){
-            listaDeClientes.remove(i);
-            atualizaTabelaCliente(tblListaDeClientes, listaDeClientes);
-            limparCampos();
-            editar = false;
-            index = -1;
-        }else{
-            JOptionPane.showMessageDialog(this, "Não foi selecionado nenhum cliente para exclusão");
-        }
-    }
-    
 }
